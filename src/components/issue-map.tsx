@@ -15,7 +15,7 @@ import { Button } from './ui/button';
 
 export function IssueMap() {
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
-  const position = { lat: 37.7749, lng: -122.4194 };
+  const position = { lat: 18.5204, lng: 73.8567 }; // Centered on Pune
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
   if (!apiKey) {
