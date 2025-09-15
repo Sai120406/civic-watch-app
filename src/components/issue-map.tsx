@@ -12,6 +12,7 @@ import { issues } from '@/lib/data';
 import type { Issue } from '@/types';
 import Link from 'next/link';
 import { Button } from './ui/button';
+import Image from 'next/image';
 
 export function IssueMap() {
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
@@ -20,12 +21,26 @@ export function IssueMap() {
 
   if (!apiKey) {
     return (
-      <div className="flex h-full items-center justify-center bg-muted">
-        <p className="text-center text-muted-foreground">
-          Google Maps API key is not configured.
-          <br />
-          Please set the NEXT_PUBLIC_GOOGLE_MAPS_API_KEY environment variable.
-        </p>
+      <div className="flex h-full w-full items-center justify-center bg-muted">
+        <div className="relative h-full w-full">
+          <Image
+            src="https://picsum.photos/seed/map/1600/1200"
+            alt="Map placeholder"
+            fill
+            className="object-cover opacity-30"
+            data-ai-hint="map city"
+          />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="rounded-lg bg-background/80 p-6 text-center shadow-lg backdrop-blur-sm">
+              <h3 className="font-headline text-lg font-semibold">Map Unavailable</h3>
+              <p className="text-muted-foreground">
+                Google Maps API key is not configured.
+                <br />
+                A placeholder image is being shown.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
