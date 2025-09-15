@@ -19,7 +19,8 @@ const categoryHints: Record<string, string> = {
   other: 'public space',
 };
 
-export default function IssueDetailPage({ params: { id } }: { params: { id:string } }) {
+export default function IssueDetailPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const { issues } = useIssues();
   const [issue, setIssue] = useState<Issue | null | undefined>(undefined);
 
