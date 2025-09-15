@@ -1,3 +1,5 @@
+'use client';
+
 import { SidebarTrigger } from '@/components/ui/sidebar';
 import { Button } from './ui/button';
 import {
@@ -8,10 +10,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuItem,
 } from './ui/dropdown-menu';
-import { CircleUser, LogOut, Settings } from 'lucide-react';
-import { users } from '@/lib/data';
+import { LogOut, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import Link from 'next/link';
+import { useAuth } from '@/context/auth-context';
+import { usePathname } from 'next/navigation';
 
 type HeaderProps = {
   pageTitle: string;
@@ -19,7 +22,12 @@ type HeaderProps = {
 };
 
 export default function Header({ pageTitle, children }: HeaderProps) {
-  const currentUser = users[0];
+  const { user, signOut } = useAuth();
+  const pathname = usePathname();
+
+  if (pathname.includes('/login') || pathname.includes('/admin')) {
+    return null;
+  }
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
@@ -35,12 +43,8 @@ export default function Header({ pageTitle, children }: HeaderProps) {
               className="overflow-hidden rounded-full"
             >
               <Avatar>
-                <AvatarImage
-                  src={currentUser.avatarUrl}
-                  alt={currentUser.name}
-                  data-ai-hint="person"
-                />
-                <AvatarFallback>{currentUser.name.charAt(0)}</AvatarFallback>
+                 {user?.photoURL && <AvatarImage src={user.photoURL} alt={user.displayName || 'User'} />}
+                <AvatarFallback>{user?.displayName?.charAt(0) || 'U'}</AvatarFallback>
               </Avatar>
             </Button>
           </DropdownMenuTrigger>
@@ -52,11 +56,9 @@ export default function Header({ pageTitle, children }: HeaderProps) {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem asChild>
-              <Link href="/login">
+            <DropdownMenuItem onClick={() => signOut()}>
                 <LogOut className="mr-2 h-4 w-4" />
                 Logout
-              </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

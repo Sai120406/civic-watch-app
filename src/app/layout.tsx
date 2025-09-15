@@ -4,6 +4,7 @@ import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import './globals.css';
 import { IssuesProvider } from '@/context/issues-context';
+import { AuthProvider } from '@/context/auth-context';
 
 export const metadata: Metadata = {
   title: 'CivicWatch',
@@ -35,9 +36,11 @@ export default function RootLayout({
           'font-body'
         )}
       >
-        <IssuesProvider>
-          <AppLayout>{children}</AppLayout>
-        </IssuesProvider>
+        <AuthProvider>
+          <IssuesProvider>
+            <AppLayout>{children}</AppLayout>
+          </IssuesProvider>
+        </AuthProvider>
         <Toaster />
       </body>
     </html>
