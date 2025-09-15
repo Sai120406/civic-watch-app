@@ -132,20 +132,4 @@ export const issues: Issue[] = [
     category: 'waste-management',
     photoUrl: 'https://picsum.photos/seed/bins1/800/600',
   },
-  {
-    id: 'issue-4',
-    title: 'Faded crosswalk at Deccan Gymkhana',
-    description:
-      'The crosswalk paint at the main Deccan Gymkhana bus stop is extremely faded and barely visible. This is a major safety concern for pedestrians. It needs to be repainted immediately.',
-    author: users[4],
-    createdAt: '1 week ago',
-    location: {
-      name: 'Deccan Gymkhana',
-      lat: 18.518,
-      lng: 73.84,
-    },
-    upvotes: 78,
-    comments: [],
-    category: 'other',
-  },
 ];
