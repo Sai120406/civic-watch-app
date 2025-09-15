@@ -76,7 +76,7 @@ export const issues: Issue[] = [
     upvotes: 42,
     comments: comments,
     category: 'pothole',
-    photoUrl: 'https://picsum.photos/seed/pothole1/800/600',
+    photoUrl: 'https://picsum.photos/seed/pothole-road/800/600',
     voiceMemoUrl: '/example-audio.mp3',
   },
   {
@@ -101,6 +101,7 @@ export const issues: Issue[] = [
       },
     ],
     category: 'street-light',
+    photoUrl: 'https://picsum.photos/seed/street-light-dark/800/600',
   },
   {
     id: 'issue-3',
@@ -130,6 +131,38 @@ export const issues: Issue[] = [
       },
     ],
     category: 'waste-management',
-    photoUrl: 'https://picsum.photos/seed/bins1/800/600',
+    photoUrl: 'https://picsum.photos/seed/overflowing-trash/800/600',
   },
+  {
+    id: 'issue-4',
+    title: 'Broken swing in Kamala Nehru Park',
+    description: 'One of the main swings in the childrens play area is broken and is a safety hazard. The chain has snapped on one side. It needs to be repaired or replaced.',
+    author: users[3],
+    createdAt: '2 days ago',
+    location: {
+        name: 'Kamala Nehru Park',
+        lat: 18.513,
+        lng: 73.824,
+    },
+    upvotes: 15,
+    comments: [],
+    category: 'other',
+    photoUrl: 'https://picsum.photos/seed/broken-swing/800/600',
+  },
+  {
+    id: 'issue-5',
+    title: 'Graffiti on public library wall',
+    description: 'There is a lot of unsightly graffiti on the main wall of the city library on Bajirao Road. It should be cleaned to maintain the appearance of the historic building.',
+    author: users[4],
+    createdAt: '7 days ago',
+    location: {
+        name: 'City Library, Bajirao Road',
+        lat: 18.515,
+        lng: 73.856,
+    },
+    upvotes: 12,
+    comments: [],
+    category: 'other',
+    photoUrl: 'https://picsum.photos/seed/graffiti-wall/800/600',
+  }
 ];

@@ -12,7 +12,14 @@ import VoiceMemoPlayer from '@/components/voice-memo-player';
 import { useEffect, useState } from 'react';
 import type { Issue } from '@/types';
 
-export default function IssueDetailPage({ params }: { params: { id: string } }) {
+const categoryHints: Record<string, string> = {
+  pothole: 'pothole road',
+  'street-light': 'dark street',
+  'waste-management': 'trash overflow',
+  other: 'public space',
+};
+
+export default function IssueDetailPage({ params }: { params: { id:string } }) {
   const { issues } = useIssues();
   const [issue, setIssue] = useState<Issue | null | undefined>(undefined);
 
@@ -31,6 +38,16 @@ export default function IssueDetailPage({ params }: { params: { id: string } }) 
 
   if (!issue) {
     notFound();
+  }
+
+  const getAiHint = () => {
+    let hint = categoryHints[issue.category];
+    if (issue.title.toLowerCase().includes('graffiti')) {
+      hint = 'graffiti wall';
+    } else if (issue.title.toLowerCase().includes('swing')) {
+      hint = 'playground swing';
+    }
+    return hint;
   }
 
   return (
@@ -71,7 +88,7 @@ export default function IssueDetailPage({ params }: { params: { id: string } }) 
                 width={800}
                 height={600}
                 className="aspect-video w-full object-cover"
-                data-ai-hint="pothole street"
+                data-ai-hint={getAiHint()}
               />
             </div>
           )}
