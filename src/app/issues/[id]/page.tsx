@@ -1,5 +1,7 @@
+'use client';
+
 import { notFound } from 'next/navigation';
-import { issues } from '@/lib/data';
+import { useIssues } from '@/context/issues-context';
 import Header from '@/components/header';
 import { ArrowBigUp, MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
@@ -7,9 +9,25 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SentimentAnalyzer from '@/components/sentiment-analyzer';
 import Image from 'next/image';
 import VoiceMemoPlayer from '@/components/voice-memo-player';
+import { useEffect, useState } from 'react';
+import type { Issue } from '@/types';
 
 export default function IssueDetailPage({ params }: { params: { id: string } }) {
-  const issue = issues.find((issue) => issue.id === params.id);
+  const { issues } = useIssues();
+  const [issue, setIssue] = useState<Issue | null | undefined>(undefined);
+
+  useEffect(() => {
+    const foundIssue = issues.find((issue) => issue.id === params.id);
+    setIssue(foundIssue);
+  }, [issues, params.id]);
+
+  if (issue === undefined) {
+    return (
+      <div className="flex flex-1 justify-center items-center">
+        <p>Loading issue...</p>
+      </div>
+    );
+  }
 
   if (!issue) {
     notFound();

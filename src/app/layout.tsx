@@ -3,6 +3,7 @@ import { AppLayout } from '@/components/app-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { cn } from '@/lib/utils';
 import './globals.css';
+import { IssuesProvider } from '@/context/issues-context';
 
 export const metadata: Metadata = {
   title: 'CivicWatch',
@@ -34,7 +35,9 @@ export default function RootLayout({
           'font-body'
         )}
       >
-        <AppLayout>{children}</AppLayout>
+        <IssuesProvider>
+          <AppLayout>{children}</AppLayout>
+        </IssuesProvider>
         <Toaster />
       </body>
     </html>

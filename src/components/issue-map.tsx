@@ -8,7 +8,7 @@ import {
   Pin,
   InfoWindow,
 } from '@vis.gl/react-google-maps';
-import { issues } from '@/lib/data';
+import { useIssues } from '@/context/issues-context';
 import type { Issue } from '@/types';
 import Link from 'next/link';
 import { Button } from './ui/button';
@@ -16,6 +16,7 @@ import Image from 'next/image';
 
 export function IssueMap() {
   const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
+  const { issues } = useIssues();
   const position = { lat: 18.5204, lng: 73.8567 }; // Centered on Pune
   const apiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -35,7 +36,6 @@ export function IssueMap() {
               <h3 className="font-headline text-lg font-semibold">Map Unavailable</h3>
               <p className="text-muted-foreground">
                 Google Maps API key is not configured.
-                <br />A placeholder image is being shown.
               </p>
             </div>
           </div>

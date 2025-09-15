@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import { v4 as uuidv4 } from 'uuid';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +26,10 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/header';
-import { Camera, Mic } from 'lucide-react';
+import { Camera, Locate, Mic } from 'lucide-react';
+import { useIssues } from '@/context/issues-context';
+import { users } from '@/lib/data';
+import { useRouter } from 'next/navigation';
 
 const formSchema = z.object({
   title: z.string().min(10, 'Title must be at least 10 characters.'),
@@ -36,24 +40,115 @@ const formSchema = z.object({
   voiceMemo: z.any().optional(),
 });
 
+type FormValues = z.infer<typeof formSchema>;
+
 export default function SubmitPage() {
   const { toast } = useToast();
-  const form = useForm<z.infer<typeof formSchema>>({
+  const { addIssue } = useIssues();
+  const router = useRouter();
+  const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
       description: '',
       location: '',
+      category: 'pothole',
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          // For demonstration, we'll use a reverse geocoding service placeholder.
+          // In a real app, you would use a service like Google Maps Geocoding API.
+          fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`)
+            .then(res => res.json())
+            .then(data => {
+              const locationName = data.display_name || `Lat: ${latitude.toFixed(4)}, Lng: ${longitude.toFixed(4)}`;
+              form.setValue('location', locationName, { shouldValidate: true });
+            })
+            .catch(() => {
+              toast({
+                variant: 'destructive',
+                title: 'Could not fetch address',
+                description: 'Unable to retrieve address for your location.',
+              });
+            });
+        },
+        (error) => {
+          toast({
+            variant: 'destructive',
+            title: 'Geolocation failed',
+            description: error.message,
+          });
+        }
+      );
+    } else {
+      toast({
+        variant: 'destructive',
+        title: 'Geolocation not supported',
+        description: 'Your browser does not support geolocation.',
+      });
+    }
+  };
+
+  async function onSubmit(values: FormValues) {
+    const { photo, voiceMemo, ...rest } = values;
+
+    let photoUrl: string | undefined = undefined;
+    if (photo && photo[0]) {
+      photoUrl = URL.createObjectURL(photo[0]);
+    }
+
+    let voiceMemoUrl: string | undefined = undefined;
+    if (voiceMemo && voiceMemo[0]) {
+      voiceMemoUrl = URL.createObjectURL(voiceMemo[0]);
+    }
+
+    let lat = 18.5204 + (Math.random() - 0.5) * 0.1;
+    let lng = 73.8567 + (Math.random() - 0.5) * 0.1;
+    
+    // In a real app, you'd get coordinates from the location string
+    // using a geocoding service.
+    if (navigator.geolocation) {
+        try {
+            const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+                navigator.geolocation.getCurrentPosition(resolve, reject);
+            });
+            lat = position.coords.latitude;
+            lng = position.coords.longitude;
+        } catch (error) {
+            console.warn("Could not get precise location for new issue, using random offset.");
+        }
+    }
+
+
+    const newIssue = {
+      id: uuidv4(),
+      ...rest,
+      author: users[0],
+      createdAt: 'Just now',
+      location: {
+        name: values.location,
+        lat,
+        lng,
+      },
+      upvotes: 0,
+      comments: [],
+      photoUrl,
+      voiceMemoUrl,
+    };
+    
+    addIssue(newIssue);
+
     toast({
       title: 'Issue Submitted!',
       description: "Thanks for helping improve your community.",
     });
     form.reset();
+    router.push('/');
   }
 
   return (
@@ -133,12 +228,23 @@ export default function SubmitPage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Location</FormLabel>
-                      <FormControl>
-                        <Input
-                          placeholder="e.g., Intersection of Main St & 2nd Ave"
-                          {...field}
-                        />
-                      </FormControl>
+                      <div className="flex gap-2">
+                        <FormControl>
+                          <Input
+                            placeholder="e.g., Intersection of Main St & 2nd Ave"
+                            {...field}
+                          />
+                        </FormControl>
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="icon"
+                          onClick={handleGetLocation}
+                        >
+                          <Locate className="h-5 w-5" />
+                          <span className="sr-only">Get current location</span>
+                        </Button>
+                      </div>
                       <FormMessage />
                     </FormItem>
                   )}

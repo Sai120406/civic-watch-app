@@ -1,8 +1,10 @@
+'use client';
+
 import Link from 'next/link';
 import { PlusCircle, ListFilter } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { issues } from '@/lib/data';
+import { useIssues } from '@/context/issues-context';
 import IssueCard from '@/components/issue-card';
 import Header from '@/components/header';
 import {
@@ -15,6 +17,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 
 export default function Dashboard() {
+  const { issues } = useIssues();
   return (
     <div className="flex flex-1 flex-col">
       <Header pageTitle="Dashboard">
