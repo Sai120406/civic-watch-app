@@ -35,8 +35,7 @@ export function IssueMap() {
               <h3 className="font-headline text-lg font-semibold">Map Unavailable</h3>
               <p className="text-muted-foreground">
                 Google Maps API key is not configured.
-                <br />
-                A placeholder image is being shown.
+                <br />A placeholder image is being shown.
               </p>
             </div>
           </div>
@@ -62,8 +61,8 @@ export function IssueMap() {
               onClick={() => setSelectedIssue(issue)}
             >
               <Pin
-                background={'#4A8FE7'}
-                borderColor={'#3B72B9'}
+                background={'#E53E3E'}
+                borderColor={'#C53030'}
                 glyphColor={'#FFFFFF'}
               />
             </AdvancedMarker>
