@@ -19,14 +19,14 @@ const categoryHints: Record<string, string> = {
   other: 'public space',
 };
 
-export default function IssueDetailPage({ params }: { params: { id:string } }) {
+export default function IssueDetailPage({ params: { id } }: { params: { id:string } }) {
   const { issues } = useIssues();
   const [issue, setIssue] = useState<Issue | null | undefined>(undefined);
 
   useEffect(() => {
-    const foundIssue = issues.find((issue) => issue.id === params.id);
+    const foundIssue = issues.find((issue) => issue.id === id);
     setIssue(foundIssue);
-  }, [issues, params.id]);
+  }, [issues, id]);
 
   if (issue === undefined) {
     return (
