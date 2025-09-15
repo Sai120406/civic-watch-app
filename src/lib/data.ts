@@ -76,6 +76,8 @@ export const issues: Issue[] = [
     upvotes: 42,
     comments: comments,
     category: 'pothole',
+    photoUrl: 'https://picsum.photos/seed/pothole1/800/600',
+    voiceMemoUrl: '/example-audio.mp3',
   },
   {
     id: 'issue-2',
@@ -128,6 +130,7 @@ export const issues: Issue[] = [
       },
     ],
     category: 'waste-management',
+    photoUrl: 'https://picsum.photos/seed/bins1/800/600',
   },
   {
     id: 'issue-4',

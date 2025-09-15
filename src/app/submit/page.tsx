@@ -25,12 +25,15 @@ import {
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import Header from '@/components/header';
+import { Camera, Mic } from 'lucide-react';
 
 const formSchema = z.object({
   title: z.string().min(10, 'Title must be at least 10 characters.'),
   description: z.string().min(20, 'Description must be at least 20 characters.'),
   category: z.enum(['pothole', 'street-light', 'waste-management', 'other']),
   location: z.string().min(5, 'Please provide a location or address.'),
+  photo: z.any().optional(),
+  voiceMemo: z.any().optional(),
 });
 
 export default function SubmitPage() {
@@ -136,6 +139,57 @@ export default function SubmitPage() {
                           {...field}
                         />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+                <FormField
+                  control={form.control}
+                  name="photo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Add Photo</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            type="file"
+                            accept="image/*"
+                            className="pl-10"
+                            onChange={(e) => field.onChange(e.target.files)}
+                          />
+                          <Camera className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        A picture is worth a thousand words.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="voiceMemo"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Add Voice Memo</FormLabel>
+                      <FormControl>
+                        <div className="relative">
+                          <Input
+                            type="file"
+                            accept="audio/*"
+                            className="pl-10"
+                            onChange={(e) => field.onChange(e.target.files)}
+                          />
+                          <Mic className="absolute left-3 top-1/2 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                        </div>
+                      </FormControl>
+                      <FormDescription>
+                        Explain the issue in your own words.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}

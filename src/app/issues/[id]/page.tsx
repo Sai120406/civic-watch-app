@@ -5,6 +5,8 @@ import { ArrowBigUp, MapPin } from 'lucide-react';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SentimentAnalyzer from '@/components/sentiment-analyzer';
+import Image from 'next/image';
+import VoiceMemoPlayer from '@/components/voice-memo-player';
 
 export default function IssueDetailPage({ params }: { params: { id: string } }) {
   const issue = issues.find((issue) => issue.id === params.id);
@@ -42,6 +44,21 @@ export default function IssueDetailPage({ params }: { params: { id: string } }) 
               <span className="font-medium">{issue.location.name}</span>
             </div>
           </div>
+
+          {issue.photoUrl && (
+            <div className="overflow-hidden rounded-lg border">
+              <Image
+                src={issue.photoUrl}
+                alt={issue.title}
+                width={800}
+                height={600}
+                className="aspect-video w-full object-cover"
+                data-ai-hint="pothole street"
+              />
+            </div>
+          )}
+
+          {issue.voiceMemoUrl && <VoiceMemoPlayer issue={issue} />}
 
           <div className="prose prose-lg max-w-none text-foreground dark:prose-invert">
             <p>{issue.description}</p>

@@ -32,4 +32,6 @@ export type Issue = {
   upvotes: number;
   comments: Comment[];
   category: IssueCategory;
+  photoUrl?: string;
+  voiceMemoUrl?: string;
 };
