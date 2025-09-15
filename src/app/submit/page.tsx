@@ -30,6 +30,8 @@ import { Camera, Locate, Mic } from 'lucide-react';
 import { useIssues } from '@/context/issues-context';
 import { users } from '@/lib/data';
 import { useRouter } from 'next/navigation';
+import { useAuth } from '@/context/auth-context';
+import { useEffect } from 'react';
 
 const formSchema = z.object({
   title: z.string().min(10, 'Title must be at least 10 characters.'),
@@ -46,6 +48,14 @@ export default function SubmitPage() {
   const { toast } = useToast();
   const { addIssue } = useIssues();
   const router = useRouter();
+  const { user, loading } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
+
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -150,6 +160,15 @@ export default function SubmitPage() {
     form.reset();
     router.push('/');
   }
+
+  if (loading || !user) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <p>Loading...</p>
+      </div>
+    );
+  }
+
 
   return (
     <div className="flex flex-1 flex-col">
