@@ -51,7 +51,8 @@ import { useToast } from '@/hooks/use-toast';
 import { IssueMap } from '@/components/issue-map';
 import { Separator } from '@/components/ui/separator';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { MapPin } from 'lucide-react';
+import { ArrowLeft, MapPin } from 'lucide-react';
+import Link from 'next/link';
 
 const statusStyles: Record<IssueStatus, string> = {
   Open: 'bg-red-500 hover:bg-red-500/80',
@@ -90,6 +91,14 @@ export default function AdminDashboardPage() {
           <h1 className="font-headline text-2xl font-bold text-primary">
             CivicWatch Admin
           </h1>
+          <div className="ml-auto">
+            <Button asChild variant="outline">
+              <Link href="/">
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Back to App
+              </Link>
+            </Button>
+          </div>
         </header>
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Card>
