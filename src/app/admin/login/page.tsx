@@ -40,19 +40,13 @@ export default function AdminLoginPage() {
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === 'admin' && password === 'admin') {
-      toast({
-        title: 'Admin Login Successful',
-        description: 'Redirecting to the dashboard...',
-      });
-      router.push('/admin/dashboard');
-    } else {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: 'Invalid email or password.',
-      });
-    }
+    // This is where you would typically handle a real authentication request
+    // For now, it will show a failure message as the static credentials are removed.
+    toast({
+      variant: 'destructive',
+      title: 'Login Failed',
+      description: 'Invalid email or password.',
+    });
   };
 
   return (
@@ -77,8 +71,8 @@ export default function AdminLoginPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  type="text"
-                  placeholder="admin"
+                  type="email"
+                  placeholder="m@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
