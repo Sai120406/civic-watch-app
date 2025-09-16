@@ -49,11 +49,11 @@ export default function AdminLoginPage() {
         description: 'Redirecting to the admin dashboard...',
       });
       router.push('/admin/dashboard');
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: 'Invalid email or password.',
+        description: error.message || 'Invalid email or password.',
       });
       console.error('Admin login error:', error);
     }
