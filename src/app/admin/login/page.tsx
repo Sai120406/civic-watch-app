@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2024 Neural Networks
+ * Copyright 2024 Neural Nomads
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -43,10 +43,9 @@ export default function AdminLoginPage() {
     if (email === 'admin' && password === 'admin') {
       toast({
         title: 'Admin Login Successful',
-        description: 'Welcome back, admin!',
+        description: 'Redirecting to the dashboard...',
       });
-      // In a real application, you would redirect to an admin dashboard
-      // router.push('/admin/dashboard');
+      router.push('/admin/dashboard');
     } else {
       toast({
         variant: 'destructive',
@@ -78,8 +77,8 @@ export default function AdminLoginPage() {
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  type="email"
-                  placeholder="m@example.com"
+                  type="text"
+                  placeholder="admin"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

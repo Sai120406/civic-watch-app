@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2024 Neural Networks
+ * Copyright 2024 Neural Nomads
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,12 +18,13 @@
 'use client';
 
 import { createContext, useContext, useState, ReactNode } from 'react';
-import type { Issue } from '@/types';
+import type { Issue, IssueStatus } from '@/types';
 import { issues as initialIssues } from '@/lib/data';
 
 interface IssuesContextType {
   issues: Issue[];
   addIssue: (issue: Issue) => void;
+  updateIssueStatus: (issueId: string, status: IssueStatus) => void;
 }
 
 const IssuesContext = createContext<IssuesContextType | undefined>(undefined);
@@ -35,8 +36,16 @@ export function IssuesProvider({ children }: { children: ReactNode }) {
     setIssues((prevIssues) => [issue, ...prevIssues]);
   };
 
+  const updateIssueStatus = (issueId: string, status: IssueStatus) => {
+    setIssues((prevIssues) =>
+      prevIssues.map((issue) =>
+        issue.id === issueId ? { ...issue, status } : issue
+      )
+    );
+  };
+
   return (
-    <IssuesContext.Provider value={{ issues, addIssue }}>
+    <IssuesContext.Provider value={{ issues, addIssue, updateIssueStatus }}>
       {children}
     </IssuesContext.Provider>
   );

@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2024 Neural Networks
+ * Copyright 2024 Neural Nomads
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,8 @@ export type IssueCategory =
   | 'waste-management'
   | 'other';
 
+export type IssueStatus = 'Open' | 'In Progress' | 'Resolved';
+
 export type Issue = {
   id: string;
   title: string;
@@ -49,6 +51,7 @@ export type Issue = {
   upvotes: number;
   comments: Comment[];
   category: IssueCategory;
+  status: IssueStatus;
   photoUrl?: string;
   voiceMemoUrl?: string;
 };

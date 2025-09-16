@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2024 Neural Networks
+ * Copyright 2024 Neural Nomads
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -164,6 +164,7 @@ export default function SubmitPage() {
       },
       upvotes: 0,
       comments: [],
+      status: 'Open' as const,
       photoUrl,
       voiceMemoUrl,
     };

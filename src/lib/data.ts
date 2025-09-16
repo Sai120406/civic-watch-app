@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2024 Neural Networks
+ * Copyright 2024 Neural Nomads
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,6 +93,7 @@ export const issues: Issue[] = [
     upvotes: 42,
     comments: comments,
     category: 'pothole',
+    status: 'In Progress',
     photoUrl: 'https://picsum.photos/seed/pothole-road/800/600',
     voiceMemoUrl: '/example-audio.mp3',
   },
@@ -118,7 +119,8 @@ export const issues: Issue[] = [
       },
     ],
     category: 'street-light',
-    photoUrl: 'https://picsum.photos/seed/street-light-dark/800/600',
+    status: 'Resolved',
+    photoUrl: 'https://picsum.photos/seed/dark-street/800/600',
   },
   {
     id: 'issue-3',
@@ -148,6 +150,7 @@ export const issues: Issue[] = [
       },
     ],
     category: 'waste-management',
+    status: 'Open',
     photoUrl: 'https://picsum.photos/seed/overflowing-trash/800/600',
   },
   {
@@ -164,6 +167,7 @@ export const issues: Issue[] = [
     upvotes: 15,
     comments: [],
     category: 'other',
+    status: 'Open',
     photoUrl: 'https://picsum.photos/seed/broken-swing/800/600',
   },
   {
@@ -180,6 +184,7 @@ export const issues: Issue[] = [
     upvotes: 12,
     comments: [],
     category: 'other',
+    status: 'Resolved',
     photoUrl: 'https://picsum.photos/seed/graffiti-wall/800/600',
   }
 ];
