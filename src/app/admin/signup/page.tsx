@@ -31,6 +31,8 @@ import { useToast } from '@/hooks/use-toast';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { auth } from '@/lib/firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 export default function AdminSignUpPage() {
   const [email, setEmail] = useState('');
@@ -39,16 +41,33 @@ export default function AdminSignUpPage() {
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleSignUp = (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real application, this would involve a call to a backend service
-    // to create a new admin user, possibly with a verification process.
-    toast({
-      title: 'Sign Up Submitted',
-      description:
-        'Your request has been sent for approval. You will be notified via email.',
-    });
-    router.push('/admin/login');
+    try {
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      // After creating the user, update their profile with the full name
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: fullName,
+        });
+      }
+      toast({
+        title: 'Sign Up Successful',
+        description: 'Your admin account has been created.',
+      });
+      router.push('/admin/login');
+    } catch (error: any) {
+      toast({
+        variant: 'destructive',
+        title: 'Sign Up Failed',
+        description: error.message,
+      });
+      console.error('Admin signup error:', error);
+    }
   };
 
   return (
@@ -62,10 +81,10 @@ export default function AdminSignUpPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle className="font-headline text-2xl">
-            Admin Account Request
+            Create Admin Account
           </CardTitle>
           <CardDescription>
-            Fill out the form to request an administrator account.
+            Fill out the form to create a new administrator account.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -104,7 +123,7 @@ export default function AdminSignUpPage() {
                 />
               </div>
               <Button type="submit" className="w-full">
-                Request Account
+                Create Account
               </Button>
             </div>
           </form>
