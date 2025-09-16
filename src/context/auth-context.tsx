@@ -1,5 +1,5 @@
 /**
- * @license
+ * @license_TODO
  * Copyright 2024 Neural Networks
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -42,8 +42,6 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const unprotectedRoutes = ['/login', '/admin/login', '/admin/signup'];
-
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
@@ -61,30 +59,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loading) return;
 
-    const isAuthRoute = unprotectedRoutes.some(route => pathname.startsWith(route));
-    const isAdminRoute = pathname.startsWith('/admin');
+    // This provider only handles routing for regular users.
+    // Admin routes are handled separately.
+    const isUserLoginPage = pathname.startsWith('/login');
 
-    // If on an admin page, let admin-specific logic handle routing
-    if (isAdminRoute) {
-      return;
-    }
-    
-    // If user is not logged in and is trying to access a protected page
-    if (!user && !isAuthRoute) {
+    if (!user && !isUserLoginPage) {
       router.push('/login');
-    }
-
-    // If user is logged in and is on a login/signup page for regular users
-    if (user && pathname === '/login') {
+    } else if (user && isUserLoginPage) {
       router.push('/');
     }
-
   }, [user, loading, pathname, router]);
 
   const signIn = async () => {
     try {
       await signInWithPopup(auth, provider);
-      router.push('/');
+      // The useEffect hook will handle the redirect to '/'
     } catch (error) {
       console.error('Error signing in with Google', error);
     }
@@ -93,7 +82,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      router.push('/login');
+      // The useEffect hook will handle the redirect to '/login'
     } catch (error) {
       console.error('Error signing out', error);
     }

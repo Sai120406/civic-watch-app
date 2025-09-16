@@ -39,12 +39,13 @@ type HeaderProps = {
 };
 
 export default function Header({ pageTitle, children }: HeaderProps) {
-  const { user, signOut } = useAuth();
   const pathname = usePathname();
 
   if (pathname.includes('/login') || pathname.includes('/admin')) {
     return null;
   }
+
+  const { user, signOut } = useAuth();
 
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-4 sm:static sm:h-auto sm:border-0 sm:bg-transparent sm:px-6">
