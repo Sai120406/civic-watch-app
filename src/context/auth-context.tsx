@@ -62,6 +62,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (loading) return;
 
     const isAuthRoute = unprotectedRoutes.some(route => pathname.startsWith(route));
+    const isAdminRoute = pathname.startsWith('/admin');
+
+    // If on an admin page, let admin-specific logic handle routing
+    if (isAdminRoute) {
+      return;
+    }
     
     // If user is not logged in and is trying to access a protected page
     if (!user && !isAuthRoute) {
