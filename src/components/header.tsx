@@ -29,7 +29,6 @@ import {
 } from './ui/dropdown-menu';
 import { LogOut, Settings } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
-import Link from 'next/link';
 import { useAuth } from '@/context/auth-context';
 import { usePathname } from 'next/navigation';
 

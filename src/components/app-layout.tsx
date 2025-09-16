@@ -32,9 +32,8 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { usePathname } from 'next/navigation';
 import { users } from '@/lib/data';
-import { useEffect, useState } from 'react';
 
-function UserSidebar() {
+function UserLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth();
   const demoUser = users[0]; // for demo points
 
@@ -81,32 +80,13 @@ function UserSidebar() {
           </Button>
         </SidebarFooter>
       </Sidebar>
+      <SidebarInset>{children}</SidebarInset>
     </SidebarProvider>
   );
 }
 
-function UserLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <AuthProvider>
-      <UserSidebar />
-      <SidebarInset>{children}</SidebarInset>
-    </AuthProvider>
-  );
-}
-
-
-export function AppLayout({ children }: { children: React.ReactNode }) {
+function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null;
-  }
-  
   const isAuthPage = pathname.includes('/login');
   const isAdminPage = pathname.includes('/admin');
 
@@ -115,4 +95,12 @@ export function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return <UserLayout>{children}</UserLayout>;
+}
+
+export function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <MainLayout>{children}</MainLayout>
+    </AuthProvider>
+  );
 }

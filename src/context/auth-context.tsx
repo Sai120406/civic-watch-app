@@ -59,13 +59,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loading) return;
 
-    // This provider only handles routing for regular users.
-    // Admin routes are handled separately.
-    const isUserLoginPage = pathname.startsWith('/login');
+    const isAuthPage = pathname.startsWith('/login');
+    const isAdminPage = pathname.startsWith('/admin');
 
-    if (!user && !isUserLoginPage) {
+    // This provider only handles routing for regular users.
+    // We ignore admin pages to let them handle their own auth.
+    if (isAdminPage) {
+      return;
+    }
+
+    if (!user && !isAuthPage) {
       router.push('/login');
-    } else if (user && isUserLoginPage) {
+    } else if (user && isAuthPage) {
       router.push('/');
     }
   }, [user, loading, pathname, router]);
