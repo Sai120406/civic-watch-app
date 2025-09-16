@@ -61,16 +61,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (loading) return;
 
-    const isProtected = !unprotectedRoutes.some(route => pathname.startsWith(route));
+    const isAuthRoute = unprotectedRoutes.some(route => pathname.startsWith(route));
     
-    if (!user && isProtected) {
+    // If user is not logged in and is trying to access a protected page
+    if (!user && !isAuthRoute) {
       router.push('/login');
     }
 
-    if (user && unprotectedRoutes.includes(pathname)) {
-        if (!pathname.startsWith('/admin')) {
-            router.push('/');
-        }
+    // If user is logged in and is on a login/signup page for regular users
+    if (user && pathname === '/login') {
+      router.push('/');
     }
 
   }, [user, loading, pathname, router]);
