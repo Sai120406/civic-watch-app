@@ -57,14 +57,22 @@ export default function AdminSignUpPage() {
       }
       toast({
         title: 'Sign Up Successful',
-        description: 'Your admin account has been created.',
+        description: 'Your admin account has been created. Please log in.',
       });
       router.push('/admin/login');
     } catch (error: any) {
+      let description = 'An unexpected error occurred. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        description =
+          'This email is already in use. Please try logging in instead.';
+      } else if (error.message) {
+        description = error.message;
+      }
+      
       toast({
         variant: 'destructive',
         title: 'Sign Up Failed',
-        description: error.message,
+        description: description,
       });
       console.error('Admin signup error:', error);
     }
