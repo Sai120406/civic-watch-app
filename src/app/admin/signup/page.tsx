@@ -65,6 +65,8 @@ export default function AdminSignUpPage() {
       if (error.code === 'auth/email-already-in-use') {
         description =
           'This email is already in use. Please try logging in instead.';
+      } else if (error.code === 'auth/weak-password') {
+        description = 'The password is too weak. Please use at least 6 characters.';
       } else if (error.message) {
         description = error.message;
       }
