@@ -51,12 +51,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
-      // This redirection can interfere with admin login.
-      // The redirect on login is now handled inside the signIn function.
     });
 
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   const signIn = async () => {
     try {
