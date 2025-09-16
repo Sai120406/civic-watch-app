@@ -28,9 +28,8 @@ import {
   User as FirebaseUser,
   onAuthStateChanged,
   signOut as firebaseSignOut,
-  getRedirectResult,
 } from 'firebase/auth';
-import { auth, redirect } from '@/lib/firebase';
+import { auth, provider, signInWithPopup } from '@/lib/firebase';
 import { usePathname, useRouter } from 'next/navigation';
 
 interface AuthContextType {
@@ -55,12 +54,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
     return () => unsubscribe();
   }, []);
-  
-  useEffect(() => {
-    getRedirectResult(auth).catch(error => {
-        console.error("Error getting redirect result", error);
-    });
-  }, [])
 
   useEffect(() => {
     if (loading) return;
@@ -83,7 +76,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async () => {
     try {
-      await redirect();
+      await signInWithPopup(auth, provider);
     } catch (error) {
       console.error('Error signing in with Google', error);
     }

@@ -17,7 +17,7 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 const firebaseConfig = {
   projectId: 'studio-5022590512-361a5',
@@ -34,8 +34,4 @@ const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
 const auth = getAuth(app);
 const provider = new GoogleAuthProvider();
 
-const redirect = async () => {
-    await signInWithRedirect(auth, provider);
-}
-
-export { app, auth, provider, redirect, getRedirectResult };
+export { app, auth, provider, signInWithPopup };
