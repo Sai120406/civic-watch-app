@@ -31,7 +31,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { auth, provider } from '@/lib/firebase';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -42,19 +42,38 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+const unprotectedRoutes = ['/login', '/admin/login', '/admin/signup'];
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
       setLoading(false);
     });
-
     return () => unsubscribe();
   }, []);
+
+  useEffect(() => {
+    if (loading) return;
+
+    const isProtected = !unprotectedRoutes.some(route => pathname.startsWith(route));
+    
+    if (!user && isProtected) {
+      router.push('/login');
+    }
+
+    if (user && unprotectedRoutes.includes(pathname)) {
+        if (!pathname.startsWith('/admin')) {
+            router.push('/');
+        }
+    }
+
+  }, [user, loading, pathname, router]);
 
   const signIn = async () => {
     try {
@@ -76,7 +95,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
-      {!loading && children}
+      {children}
     </AuthContext.Provider>
   );
 }
