@@ -34,13 +34,25 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useAuth } from '@/context/auth-context';
 import { usePathname } from 'next/navigation';
 import { users } from '@/lib/data';
+import { useEffect, useState } from 'react';
 
 export function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth();
   const pathname = usePathname();
   const demoUser = users[0]; // for demo points
+  const [isClient, setIsClient] = useState(false);
 
-  if (pathname.includes('/login') || pathname.includes('/admin')) {
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  const isAuthPage = pathname.includes('/login') || pathname.includes('/admin');
+  
+  if (!isClient) {
+    return <>{isAuthPage ? children : null}</>;
+  }
+
+  if (isAuthPage) {
     return <>{children}</>;
   }
 
