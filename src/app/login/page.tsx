@@ -1,6 +1,6 @@
 /**
  * @license
- * Copyright 2024 Neural Networks
+ * Copyright 2024 Neural Nomads
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,8 +25,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import { useAuth } from '@/context/auth-context';
 import Link from 'next/link';
 
@@ -43,37 +41,13 @@ export default function LoginPage() {
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Login</CardTitle>
+          <CardTitle className="font-headline text-2xl">User Login</CardTitle>
           <CardDescription>
-            Enter your email below to login to your account
+            Sign in with your Google account to continue.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="m@example.com"
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
-                <Link
-                  href="#"
-                  className="ml-auto inline-block text-sm underline"
-                >
-                  Forgot your password?
-                </Link>
-              </div>
-              <Input id="password" type="password" required />
-            </div>
-            <Button type="submit" className="w-full">
-              Login
-            </Button>
             <Button
               variant="outline"
               className="w-full"
