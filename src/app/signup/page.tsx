@@ -20,8 +20,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { signInWithEmailAndPassword } from 'firebase/auth';
-import { Eye, EyeOff } from 'lucide-react';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -33,31 +32,50 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { useAuth } from '@/context/auth-context';
 import { useToast } from '@/hooks/use-toast';
 import { auth } from '@/lib/firebase';
-import { Separator } from '@/components/ui/separator';
 
-export default function LoginPage() {
-  const { signIn } = useAuth(); // This is for Google Sign-In
+export default function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [fullName, setFullName] = useState('');
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
-      // AuthProvider will handle the redirect to '/'
+      const userCredential = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+
+      if (userCredential.user) {
+        await updateProfile(userCredential.user, {
+          displayName: fullName,
+        });
+      }
+      toast({
+        title: 'Sign Up Successful',
+        description: 'Your account has been created. Redirecting...',
+      });
+      router.push('/');
     } catch (error: any) {
+      let description = 'An unexpected error occurred. Please try again.';
+      if (error.code === 'auth/email-already-in-use') {
+        description =
+          'This email is already registered. Please try logging in instead.';
+      } else if (error.message) {
+        description = error.message;
+      }
+      
       toast({
         variant: 'destructive',
-        title: 'Login Failed',
-        description: error.message || 'Invalid email or password.',
+        title: 'Sign Up Failed',
+        description: description,
       });
-      console.error('User login error:', error.code, error.message);
+      console.error('User signup error:', error);
     }
   };
 
@@ -73,14 +91,27 @@ export default function LoginPage() {
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">User Login</CardTitle>
+          <CardTitle className="font-headline text-2xl">
+            Create an Account
+          </CardTitle>
           <CardDescription>
-            Enter your credentials to access your account.
+            Join the community and help improve your city.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSignUp}>
             <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="full-name">Full Name</Label>
+                <Input
+                  id="full-name"
+                  type="text"
+                  placeholder="e.g., Alex Doe"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -94,57 +125,24 @@ export default function LoginPage() {
               </div>
               <div className="grid gap-2">
                 <Label htmlFor="password">Password</Label>
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? 'text' : 'password'}
-                    required
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    className="absolute right-1 top-1/2 h-7 w-7 -translate-y-1/2 text-muted-foreground"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
-                    ) : (
-                      <Eye className="h-4 w-4" />
-                    )}
-                    <span className="sr-only">
-                      {showPassword ? 'Hide password' : 'Show password'}
-                    </span>
-                  </Button>
-                </div>
+                <Input
+                  id="password"
+                  type="password"
+                  required
+                  minLength={6}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
               </div>
               <Button type="submit" className="w-full">
-                Login
+                Create Account
               </Button>
             </div>
           </form>
-          <Separator className="my-4" />
-          <div className="grid gap-4">
-            <Button
-              variant="outline"
-              className="w-full"
-              onClick={() => signIn()}
-            >
-              Login with Google
-            </Button>
-          </div>
           <div className="mt-4 text-center text-sm">
-            Don't have an account?{' '}
-            <Link href="/signup" className="underline">
-              Sign Up
-            </Link>
-          </div>
-          <div className="mt-2 text-center text-sm">
-            Are you an admin?{' '}
-            <Link href="/admin/login" className="underline">
-              Admin Login
+            Already have an account?{' '}
+            <Link href="/login" className="underline">
+              Login
             </Link>
           </div>
         </CardContent>

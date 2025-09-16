@@ -100,7 +100,7 @@ function MainLayout({ children }: { children: React.ReactNode }) {
     return null;
   }
 
-  const isAuthPage = pathname.includes('/login');
+  const isAuthPage = pathname.includes('/login') || pathname.includes('/signup');
   const isAdminPage = pathname.includes('/admin');
 
   if (isAuthPage || isAdminPage) {
