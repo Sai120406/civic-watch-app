@@ -57,7 +57,11 @@ export default function AdminLoginPage() {
         title: 'Login Failed',
         description: error.message || 'Invalid email or password.',
       });
-      console.error('Admin login error:', error);
+      console.error(
+        `Admin login error for email "${email}":`,
+        error.code,
+        error.message
+      );
     }
   };
 
