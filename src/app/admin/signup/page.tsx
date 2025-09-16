@@ -32,27 +32,23 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function AdminLoginPage() {
+export default function AdminSignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
   const router = useRouter();
   const { toast } = useToast();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleSignUp = (e: React.FormEvent) => {
     e.preventDefault();
-    if (email === 'admin' && password === 'admin') {
-      toast({
-        title: 'Admin Login Successful',
-        description: 'Redirecting to the dashboard...',
-      });
-      router.push('/admin/dashboard');
-    } else {
-      toast({
-        variant: 'destructive',
-        title: 'Login Failed',
-        description: 'Invalid email or password.',
-      });
-    }
+    // In a real application, this would involve a call to a backend service
+    // to create a new admin user, possibly with a verification process.
+    toast({
+      title: 'Sign Up Submitted',
+      description:
+        'Your request has been sent for approval. You will be notified via email.',
+    });
+    router.push('/admin/login');
   };
 
   return (
@@ -65,29 +61,40 @@ export default function AdminLoginPage() {
       </div>
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle className="font-headline text-2xl">Admin Login</CardTitle>
+          <CardTitle className="font-headline text-2xl">
+            Admin Account Request
+          </CardTitle>
           <CardDescription>
-            Enter your credentials to access the admin dashboard.
+            Fill out the form to request an administrator account.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form onSubmit={handleLogin}>
+          <form onSubmit={handleSignUp}>
             <div className="grid gap-4">
+              <div className="grid gap-2">
+                <Label htmlFor="full-name">Full Name</Label>
+                <Input
+                  id="full-name"
+                  type="text"
+                  placeholder="e.g., Jane Doe"
+                  required
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
                 <Input
                   id="email"
-                  type="text"
-                  placeholder="admin"
+                  type="email"
+                  placeholder="m@example.com"
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
               <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                </div>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -97,20 +104,14 @@ export default function AdminLoginPage() {
                 />
               </div>
               <Button type="submit" className="w-full">
-                Login
+                Request Account
               </Button>
             </div>
           </form>
           <div className="mt-4 text-center text-sm">
-            Need an admin account?{' '}
-            <Link href="/admin/signup" className="underline">
-              Sign Up
-            </Link>
-          </div>
-          <div className="mt-2 text-center text-sm">
-            Not an admin?{' '}
-            <Link href="/login" className="underline">
-              User Login
+            Already have an account?{' '}
+            <Link href="/admin/login" className="underline">
+              Login
             </Link>
           </div>
         </CardContent>
