@@ -50,7 +50,7 @@ export default function LoginPage() {
     e.preventDefault();
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      // AuthProvider will handle the redirect to '/'
+      router.push('/');
     } catch (error: any) {
       let description = 'An unexpected error occurred. Please try again.';
       if (error.code === 'auth/invalid-credential') {

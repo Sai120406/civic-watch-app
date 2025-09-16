@@ -60,7 +60,7 @@ export default function SignUpPage() {
         title: 'Sign Up Successful',
         description: 'Your account has been created. Redirecting...',
       });
-      // The AuthProvider will detect the new user and handle the redirect.
+      router.push('/');
     } catch (error: any) {
       let description = 'An unexpected error occurred. Please try again.';
       if (error.code === 'auth/email-already-in-use') {
