@@ -11,8 +11,8 @@ This application is a proof-of-concept platform for crowdsourcing and managing c
 - **Styling**: **Tailwind CSS** is used for all styling, allowing for rapid and consistent UI development directly within the component files. Theming is managed via CSS variables in `src/app/globals.css`.
 
 ### Backend & Data
-- **Authentication**: User identity and sign-in are managed through **Firebase Authentication**, providing a secure and scalable solution for Google Sign-In.
-- **Data Management**: For this prototype, sample issue and user data is managed client-side using **React Context API** (`src/context/issues-context.tsx`). This avoids the need for a full database while demonstrating application functionality.
+- **Authentication**: User identity and sign-in are managed through **Firebase Authentication**, providing a secure and scalable solution for both regular user Google Sign-In and a separate email/password system for administrators.
+- **Data Management**: For this prototype, sample issue and user data is managed client-side using **React Context API** (`src/context/issues-context.tsx`). This avoids the need for a full database while demonstrating application functionality. An admin dashboard at `/admin/dashboard` allows for issue status management.
 
 ### AI Integration
 - **Generative AI**: AI-powered features are implemented using **Genkit**. This includes:
@@ -22,5 +22,6 @@ This application is a proof-of-concept platform for crowdsourcing and managing c
 ### Key Features & Implementation
 - **Issue Reporting**: A multi-field form (`src/app/submit/page.tsx`) uses `react-hook-form` for state management and `zod` for validation.
 - **Interactive Map**: The map view (`src/app/map/page.tsx`) is powered by **`@vis.gl/react-google-maps`**, displaying issue locations with custom markers and info windows.
+- **Admin Portal**: A dedicated section for municipal administrators (`/admin`) allows them to sign up, log in, and manage the status of all reported issues from a central dashboard.
 - **Component-Based Architecture**: The application is broken down into reusable React components (e.g., `IssueCard`, `Header`, `Sidebar`) for a modular and maintainable codebase.
 - **Routing**: Navigation is handled by the Next.js App Router, with distinct routes for the dashboard, map, leaderboard, and individual issue details.
