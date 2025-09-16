@@ -93,9 +93,9 @@ export default function AdminDashboardPage() {
           </h1>
           <div className="ml-auto">
             <Button asChild variant="outline">
-              <Link href="/">
+              <Link href="/admin/login">
                 <ArrowLeft className="mr-2 h-4 w-4" />
-                Back to App
+                Back to login
               </Link>
             </Button>
           </div>
