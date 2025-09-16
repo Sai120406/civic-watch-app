@@ -26,7 +26,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import SentimentAnalyzer from '@/components/sentiment-analyzer';
 import Image from 'next/image';
 import VoiceMemoPlayer from '@/components/voice-memo-player';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 import type { Issue } from '@/types';
 
 const categoryHints: Record<string, string> = {
