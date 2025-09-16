@@ -66,6 +66,8 @@ export default function SignUpPage() {
       if (error.code === 'auth/email-already-in-use') {
         description =
           'This email is already registered. Please try logging in instead.';
+      } else if (error.code === 'auth/weak-password') {
+        description = 'Password is too weak. It should be at least 6 characters long.';
       } else if (error.message) {
         description = error.message;
       }

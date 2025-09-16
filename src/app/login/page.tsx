@@ -52,10 +52,17 @@ export default function LoginPage() {
       await signInWithEmailAndPassword(auth, email, password);
       // AuthProvider will handle the redirect to '/'
     } catch (error: any) {
+      let description = 'An unexpected error occurred. Please try again.';
+      if (error.code === 'auth/invalid-credential') {
+        description = 'Invalid email or password. Please try again.';
+      } else if (error.message) {
+        description = error.message;
+      }
+      
       toast({
         variant: 'destructive',
         title: 'Login Failed',
-        description: error.message || 'Invalid email or password.',
+        description: description,
       });
       console.error('User login error:', error.code, error.message);
     }
