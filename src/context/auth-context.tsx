@@ -30,7 +30,7 @@ import {
   signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { auth, provider, signInWithPopup } from '@/lib/firebase';
-import { usePathname, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface AuthContextType {
   user: FirebaseUser | null;
@@ -45,7 +45,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<FirebaseUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
-  const pathname = usePathname();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -55,28 +54,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  useEffect(() => {
-    if (loading) return;
-
-    const isAuthPage = pathname.startsWith('/login');
-    const isAdminPage = pathname.startsWith('/admin');
-
-    // This provider only handles routing for regular users.
-    // We ignore admin pages to let them handle their own auth.
-    if (isAdminPage) {
-      return;
-    }
-
-    if (!user && !isAuthPage) {
-      router.push('/login');
-    } else if (user && isAuthPage) {
-      router.push('/');
-    }
-  }, [user, loading, pathname, router]);
-
   const signIn = async () => {
     try {
       await signInWithPopup(auth, provider);
+      router.push('/');
     } catch (error) {
       console.error('Error signing in with Google', error);
     }
@@ -85,7 +66,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signOut = async () => {
     try {
       await firebaseSignOut(auth);
-      // The useEffect hook will handle the redirect to '/login'
+      router.push('/login');
     } catch (error) {
       console.error('Error signing out', error);
     }
