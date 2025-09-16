@@ -17,6 +17,8 @@
 
 'use client';
 
+import { useState } from 'react';
+import Image from 'next/image';
 import {
   Card,
   CardContent,
@@ -32,19 +34,24 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from '@/components/ui/dialog';
 import { useIssues } from '@/context/issues-context';
 import type { Issue, IssueStatus } from '@/types';
 import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { MoreHorizontal } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useToast } from '@/hooks/use-toast';
+import { IssueMap } from '@/components/issue-map';
+import { Separator } from '@/components/ui/separator';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { MapPin } from 'lucide-react';
 
 const statusStyles: Record<IssueStatus, string> = {
   Open: 'bg-red-500 hover:bg-red-500/80',
@@ -55,6 +62,7 @@ const statusStyles: Record<IssueStatus, string> = {
 export default function AdminDashboardPage() {
   const { issues, updateIssueStatus } = useIssues();
   const { toast } = useToast();
+  const [selectedIssue, setSelectedIssue] = useState<Issue | null>(null);
 
   const handleStatusChange = (issueId: string, status: IssueStatus) => {
     updateIssueStatus(issueId, status);
@@ -62,6 +70,17 @@ export default function AdminDashboardPage() {
       title: 'Status Updated',
       description: `Issue status has been changed to "${status}".`,
     });
+    if (selectedIssue?.id === issueId) {
+      setSelectedIssue({ ...selectedIssue, status });
+    }
+  };
+
+  const handleRowClick = (issue: Issue) => {
+    setSelectedIssue(issue);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedIssue(null);
   };
 
   return (
@@ -75,9 +94,21 @@ export default function AdminDashboardPage() {
         <main className="grid flex-1 items-start gap-4 p-4 sm:px-6 sm:py-0 md:gap-8">
           <Card>
             <CardHeader>
+              <CardTitle>Issue Map</CardTitle>
+              <CardDescription>
+                Geographic overview of all reported issues.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="h-[400px]">
+              <IssueMap />
+            </CardContent>
+          </Card>
+          <Card>
+            <CardHeader>
               <CardTitle>All Issues</CardTitle>
               <CardDescription>
-                Manage and track all reported civic issues.
+                Manage and track all reported civic issues. Click a row to view
+                details.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -89,15 +120,18 @@ export default function AdminDashboardPage() {
                     <TableHead>Location</TableHead>
                     <TableHead>Upvotes</TableHead>
                     <TableHead>Status</TableHead>
-                    <TableHead>
-                      <span className="sr-only">Actions</span>
-                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {issues.map((issue) => (
-                    <TableRow key={issue.id}>
-                      <TableCell className="font-medium">{issue.title}</TableCell>
+                    <TableRow
+                      key={issue.id}
+                      onClick={() => handleRowClick(issue)}
+                      className="cursor-pointer"
+                    >
+                      <TableCell className="font-medium">
+                        {issue.title}
+                      </TableCell>
                       <TableCell>{issue.category}</TableCell>
                       <TableCell>{issue.location.name}</TableCell>
                       <TableCell>{issue.upvotes}</TableCell>
@@ -105,41 +139,6 @@ export default function AdminDashboardPage() {
                         <Badge className={cn(statusStyles[issue.status])}>
                           {issue.status}
                         </Badge>
-                      </TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              aria-haspopup="true"
-                              size="icon"
-                              variant="ghost"
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                              <span className="sr-only">Toggle menu</span>
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={() => handleStatusChange(issue.id, 'Open')}
-                            >
-                              Mark as Open
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleStatusChange(issue.id, 'In Progress')
-                              }
-                            >
-                              Mark as In Progress
-                            </DropdownMenuItem>
-                            <DropdownMenuItem
-                              onClick={() =>
-                                handleStatusChange(issue.id, 'Resolved')
-                              }
-                            >
-                              Mark as Resolved
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
                       </TableCell>
                     </TableRow>
                   ))}
@@ -149,6 +148,95 @@ export default function AdminDashboardPage() {
           </Card>
         </main>
       </div>
+
+      {selectedIssue && (
+        <Dialog open={!!selectedIssue} onOpenChange={handleCloseDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle className="font-headline text-2xl">
+                {selectedIssue.title}
+              </DialogTitle>
+              <DialogDescription className="flex items-center gap-2 pt-2 text-muted-foreground">
+                <MapPin className="h-4 w-4" />
+                <span>{selectedIssue.location.name}</span>
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              {selectedIssue.photoUrl && (
+                <div className="overflow-hidden rounded-lg border">
+                  <Image
+                    src={selectedIssue.photoUrl}
+                    alt={selectedIssue.title}
+                    width={800}
+                    height={600}
+                    className="aspect-video w-full object-cover"
+                  />
+                </div>
+              )}
+              <div className="prose prose-sm max-w-none dark:prose-invert">
+                <p>{selectedIssue.description}</p>
+              </div>
+
+              <Separator />
+
+              <div>
+                <h3 className="mb-4 font-semibold">
+                  Discussion ({selectedIssue.comments.length})
+                </h3>
+                <div className="space-y-4">
+                  {selectedIssue.comments.length > 0 ? (
+                    selectedIssue.comments.map((comment) => (
+                      <div key={comment.id} className="flex gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarImage
+                            src={comment.author.avatarUrl}
+                            alt={comment.author.name}
+                          />
+                          <AvatarFallback>
+                            {comment.author.name[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2 text-xs">
+                            <span className="font-semibold">
+                              {comment.author.name}
+                            </span>
+                            <span className="text-muted-foreground">
+                              &bull; {comment.createdAt}
+                            </span>
+                          </div>
+                          <p className="mt-1 text-sm text-foreground/90">
+                            {comment.text}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p className="text-sm text-muted-foreground">
+                      No comments yet.
+                    </p>
+                  )}
+                </div>
+              </div>
+            </div>
+            <DialogFooter className="sm:justify-end">
+              <Button
+                variant="outline"
+                onClick={() => handleStatusChange(selectedIssue.id, 'In Progress')}
+                disabled={selectedIssue.status === 'In Progress'}
+              >
+                Mark as In Progress
+              </Button>
+              <Button
+                onClick={() => handleStatusChange(selectedIssue.id, 'Resolved')}
+                disabled={selectedIssue.status === 'Resolved'}
+              >
+                Mark as Resolved
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
     </div>
   );
 }
