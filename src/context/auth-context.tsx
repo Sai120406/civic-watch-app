@@ -28,7 +28,7 @@ import {
   User as FirebaseUser,
   onAuthStateChanged,
   signInWithPopup,
-  signOut,
+  signOut as firebaseSignOut,
 } from 'firebase/auth';
 import { auth, provider } from '@/lib/firebase';
 import { useRouter } from 'next/navigation';
@@ -51,9 +51,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
-      if (user) {
-        router.push('/');
-      }
+      // This redirection can interfere with admin login.
+      // The redirect on login is now handled inside the signIn function.
     });
 
     return () => unsubscribe();
@@ -62,14 +61,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async () => {
     try {
       await signInWithPopup(auth, provider);
+      router.push('/');
     } catch (error) {
       console.error('Error signing in with Google', error);
     }
   };
 
-  const logOut = async () => {
+  const signOut = async () => {
     try {
-      await signOut(auth);
+      await firebaseSignOut(auth);
       router.push('/login');
     } catch (error) {
       console.error('Error signing out', error);
@@ -77,7 +77,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signIn, signOut: logOut }}>
+    <AuthContext.Provider value={{ user, loading, signIn, signOut }}>
       {!loading && children}
     </AuthContext.Provider>
   );
