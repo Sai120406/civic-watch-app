@@ -58,9 +58,9 @@ export default function SignUpPage() {
       }
       toast({
         title: 'Sign Up Successful',
-        description: 'Your account has been created. Redirecting...',
+        description: 'Your account has been created. Please log in.',
       });
-      router.push('/');
+      router.push('/login');
     } catch (error: any) {
       let description = 'An unexpected error occurred. Please try again.';
       if (error.code === 'auth/email-already-in-use') {
