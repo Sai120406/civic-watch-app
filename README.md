@@ -1,6 +1,6 @@
 # CivicWatch: A Modern Crowdsourced Issue Reporting App
 
-This application is a proof-of-concept platform for crowdsourcing and managing civic issues. It's built using a modern, full-stack tech stack designed for performance, developer experience, and scalability.
+CivicWatch is a modern, full-stack proof-of-concept application designed for crowdsourcing and managing local civic issues. Users can report problems like potholes or broken streetlights, complete with photos and voice memos, which are then displayed on an interactive map for all to see. The platform also features a leaderboard to encourage community participation and includes an AI-powered sentiment analysis tool to gauge public opinion on reported issues. A dedicated admin portal allows municipal officials to log in, view all reported problems on a central dashboard, and update their status as they are addressed, creating a complete feedback loop between citizens and their local government.
 
 ## Technical Approach
 
