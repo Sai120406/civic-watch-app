@@ -32,6 +32,7 @@ import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { AuthProvider, useAuth } from '@/context/auth-context';
 import { usePathname } from 'next/navigation';
 import { users } from '@/lib/data';
+import { useEffect, useState } from 'react';
 
 function UserLayout({ children }: { children: React.ReactNode }) {
   const { user, signOut } = useAuth();
@@ -87,6 +88,18 @@ function UserLayout({ children }: { children: React.ReactNode }) {
 
 function MainLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (!isClient) {
+    // Render a placeholder on the server and during initial client render
+    // to avoid hydration mismatch.
+    return null;
+  }
+
   const isAuthPage = pathname.includes('/login');
   const isAdminPage = pathname.includes('/admin');
 
