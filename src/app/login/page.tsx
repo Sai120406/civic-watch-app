@@ -83,9 +83,9 @@ export default function LoginPage() {
             </Button>
           </div>
           <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{' '}
-            <Link href="#" className="underline">
-              Sign up
+            Are you an admin?{' '}
+            <Link href="/admin/login" className="underline">
+              Admin Login
             </Link>
           </div>
         </CardContent>
