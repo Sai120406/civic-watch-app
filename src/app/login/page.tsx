@@ -58,13 +58,16 @@ export default function LoginPage() {
       } else if (error.message) {
         description = error.message;
       }
-      
+
       toast({
         variant: 'destructive',
         title: 'Login Failed',
         description: description,
       });
-      console.error('User login error:', error.code, error.message);
+
+      if (error.code !== 'auth/invalid-credential') {
+        console.error('User login error:', error.code, error.message);
+      }
     }
   };
 
